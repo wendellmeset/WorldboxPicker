@@ -1,0 +1,214 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Random Picker</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: white;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            margin: 0;
+        }
+        .container {
+            text-align: center;
+        }
+        #result {
+            background-color: #f0f0f0;
+            border: 1px solid #ccc;
+            padding: 10px;
+            margin-bottom: 10px;
+            width: 200px;
+        }
+        button {
+            background-color: #e6f7ff;
+            border: none;
+            padding: 10px 20px;
+            cursor: pointer;
+            margin-bottom: 10px;
+        }
+        select {
+            background-color: #f0f0f0;
+            border: 1px solid #ccc;
+            padding: 5px;
+            width: 200px;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <input type="text" id="result" readonly>
+        <br>
+        <button onclick="pickRandom()">Pick Random</button>
+        <br>
+        <select id="listSelector" onchange="updateList()">
+            <option value="good">Good</option>
+            <option value="bad">Bad</option>
+        </select>
+    </div>
+
+    <script>
+        const lists = {
+            good: [
+    "Spawn 20 Sheep",
+    "Spawn 20 Chickens",
+    "Divine Light",
+    "Spawn 1 White Wizard",
+    "Geyser",
+    "Sponge",
+    "Rain For 5 Seconds",
+    "Spawn 20 Rabbits",
+    "Giant Trait",
+    "Acid Proof Trait",
+    "Poison Immunity Trait",
+    "Immune Trait",
+    "Tough Trait",
+    "Snow Cloud",
+    "Spawn 10 Of Kingdom Creatures",
+    "Spawn 20 Monkeys",
+    "Enchanted Biome",
+    "Fruit Bushes",
+    "Tree Fertilizer 4 Seconds",
+    "Plant Fertilizer 8 Seconds",
+    "Spawn 20 Crabs",
+    "Spawn 1 Plague Doctor",
+    "Magic Cloud",
+    "Coffee",
+    "Spawn 20 Dogs",
+    "Spawn 20 Frogs",
+    "Spawn 5 Rat Kings",
+    "Rain Cloud",
+    "Spawn 20 Cows",
+    "Spawn 20 Penguins",
+    "Spawn 5 Fairies",
+    "Golden Tooth Trait",
+    "Dragonslayer Trait",
+    "Veteran Trait",
+    "Shield",
+    "Spawn 20 Cats",
+    "Blood Rain 5 Seconds",
+    "Powerup",
+    "Fireworks",
+    "Spawn 1 Druid",
+    "Spawn 20 Turtles",
+    "Stone 2 Seconds",
+    "Immortal Trait",
+    "Ore 2 Seconds",
+    "Mythril 2 Seconds",
+    "Silver 2 Seconds",
+    "Adamantine 2 Seconds",
+    "Gold 2 Seconds",
+    "Blessing"
+],
+bad: [
+    "Spawn 1 Ice Tower",
+    "Zombie Infection 5 Seconds",
+    "Earthquake",
+    "Volcano",
+    "Napalm Bomb",
+    "Skin Burns Trait",
+    "Crippled Trait",
+    "One Eyed Trait",
+    "Unlucky Trait",
+    "Burning Feet Trait",
+    "Kingslayer Trait",
+    "Voices in my Head Trait",
+    "Greedy Trait",
+    "Paranoid Trait",
+    "Miner Trait",
+    "Atomic Bomb",
+    "Lava Cloud",
+    "Robot Santa",
+    "Spawn 10 Skeletons",
+    "Rage Cloud",
+    "Spawn 1 Golden Brain",
+    "Antimatter Bomb",
+    "Crabzilla For 10 Seconds",
+    "Water Bombs",
+    "Meteorite",
+    "Spawn 2 Cold Ones",
+    "Spawn 1 Necromancer",
+    "Spawn 1 Flame Tower",
+    "Acid Cloud",
+    "Add Energized Trait",
+    "Spawn 5 Crocodiles",
+    "Temperature Down 5 Seconds",
+    "Infinity Coin",
+    "Fire For 6 Seconds",
+    "Fire For 5 Seconds",
+    "Spawn 1 UFO",
+    "Plague",
+    "Landmines",
+    "Spawn 1 Cybercore",
+    "Delayed TNT",
+    "Spawn 1 Evil Mage",
+    "Add Mark For Death Trait",
+    "Crab Bomb",
+    "Add Mega Heartbeat Trait",
+    "Spawn 1 Super Pumpkin",
+    "Spawn 1 Biomass",
+    "Bombs",
+    "Spawn 3 Snowmen",
+    "Lava For 5 Seconds",
+    "Tsar Bombas",
+    "TNT",
+    "Acid For 5 Seconds",
+    "Grenades",
+    "Add Death Bomb Trait",
+    "Living Houses",
+    "Mush Spores 5 Seconds",
+    "Add Death Nuke Trait",
+    "Spawn 10 Wolves",
+    "Acid Geyser",
+    "Curse",
+    "Heat Ray 12 Seconds",
+    "Add Pyromaniac Trait",
+    "Spawn 20 Rats",
+    "Spawn 5 Bears",
+    "Temperature Up 5 Seconds",
+    "Spawn 1 Dragon",
+    "Ash Cloud",
+    "Spawn 20 Hyena",
+    "Gray Goo",
+    "Add Whirlwind Trait",
+    "Madness 5 Seconds",
+    "Spawn 10 Zombies",
+    "Spawn 1 Tumor",
+    "Spawn 2 Bandits",
+    "Spawn 10 Orcs",
+    "Spawn 5 Rat Kings",
+    "Living Plants",
+    "Spawn 2 Demons",
+    "Spawn 20 Snakes",
+    "10 Bowling Balls",
+    "Spawn 1 Corrupted Brain",
+    "Force",
+    "Axe",
+    "Pickaxe",
+    "Sickle",
+    "Lightning",
+    "Tornado"
+]        };
+
+        let currentList = lists.good;
+
+        function updateList() {
+            const selector = document.getElementById("listSelector");
+            currentList = lists[selector.value];
+        }
+
+        function pickRandom() {
+            const result = document.getElementById("result");
+            const randomIndex = Math.floor(Math.random() * currentList.length);
+            result.value = currentList[randomIndex];
+        }
+
+        // Initialize the list
+        updateList();
+    </script>
+</body>
+</html>
